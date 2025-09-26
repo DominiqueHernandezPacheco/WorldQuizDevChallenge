@@ -5,127 +5,122 @@ import Question from "./Question";
 import Congratulation from "./Congratulation";
 
 export default function Quiz() {
-  // --- ESTADO DEL COMPONENTE ---
   const { quizCountries, quizOptions } = useQuestionQuizPool();
   
-  // Estados para la lógica del quiz
   const [questions, setQuestions] = useState([]);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [selected, setSelected] = useState(null);
   const [answers, setAnswers] = useState([]);
   const [showResult, setShowResult] = useState(false);
-  
-  // Estados para manejar el final del quiz
   const [quizFinished, setQuizFinished] = useState(false);
   const [score, setScore] = useState(0);
+  const [isLoading, setIsLoading] = useState(true);
 
-  // --- EFECTO PARA GENERAR PREGUNTAS ---
   useEffect(() => {
-    // Genera las 10 preguntas una sola vez cuando los datos están listos.
-    if (quizCountries.length && quizOptions.length && questions.length === 0) {
-      const generated = quizCountries.map((_, index) =>
-        generateQuestion(quizCountries, quizOptions, index)
-      );
-      setQuestions(generated);
-    }
-  }, [quizCountries, quizOptions, questions]);
+    if (!quizCountries.length || !quizOptions.length) return;
+    const loadQuizData = async () => {
+      const dataPromise = new Promise(resolve => {
+        const generated = quizCountries.map((_, index) =>
+          generateQuestion(quizCountries, quizOptions, index)
+        );
+        setQuestions(generated);
+        resolve();
+      });
+      const minTimePromise = new Promise(resolve => setTimeout(resolve, 1500));
+      await Promise.all([dataPromise, minTimePromise]);
+      setIsLoading(false);
+    };
+    loadQuizData();
+  }, [quizCountries, quizOptions]);
 
-  // Muestra un mensaje de carga mientras se preparan las preguntas.
-  if (!questions.length) {
-    return <p style={{ color: 'white', fontSize: '1.2rem' }}>Cargando preguntas...</p>;
-  }
-
-
-  // --- MANEJADORES DE EVENTOS ---
-  
-  /**
-   * Se ejecuta cuando el usuario selecciona una respuesta.
-   */
   const handleAnswer = (option) => {
-    // No permitir cambiar la respuesta si ya se mostró el resultado.
     if (showResult) return; 
     
     setSelected(option);
     const newAnswers = [...answers];
     newAnswers[currentIndex] = option;
     setAnswers(newAnswers);
-    setShowResult(true); // Muestra si la respuesta fue correcta o incorrecta.
+    setShowResult(true);
+
+    // Espera 1.5 segundos y luego avanza automáticamente
+    setTimeout(() => {
+      handleNext();
+    }, 1500); 
   };
 
-  /**
-   * Se ejecuta al hacer clic en "Siguiente" o "Terminar".
-   */
   const handleNext = () => {
     setShowResult(false);
     setSelected(null);
 
-    // Si aún quedan preguntas, avanza al siguiente índice.
     if (currentIndex < questions.length - 1) {
       setCurrentIndex((prev) => prev + 1);
     } else {
-      // Si es la última pregunta, calcula el puntaje y termina el quiz.
       const finalScore = questions.reduce(
         (acc, q, idx) => acc + (answers[idx] === q.answer ? 1 : 0),
         0
       );
       setScore(finalScore);
-      setQuizFinished(true); // Activa la pantalla de felicitaciones.
+      setQuizFinished(true);
     }
   };
 
-  /**
-   * Se ejecuta al hacer clic en "Jugar de Nuevo" en la pantalla de felicitaciones.
-   */
   const handleRestart = () => {
-    // La forma más fácil y segura de reiniciar es recargar la página.
-    // Esto asegura que se pidan nuevas preguntas y todo el estado se limpie.
     window.location.reload();
   };
 
+  const correctAnswersCount = answers.reduce((acc, currentAnswer, index) => {
+    if (currentAnswer && questions[index] && currentAnswer === questions[index].answer) {
+      return acc + 1;
+    }
+    return acc;
+  }, 0);
 
-  // --- RENDERIZADO DEL COMPONENTE ---
+  if (isLoading) {
+    return (
+      <div className="loader-container">
+        <div className="loader-spinner"></div>
+        <p>Cargando preguntas...</p>
+      </div>
+    );
+  }
   
   return (
     <>
       {quizFinished ? (
-        // Si el quiz ha terminado, muestra la pantalla de felicitaciones.
         <Congratulation 
           score={score}
           totalQuestions={questions.length}
           onRestart={handleRestart}
         />
       ) : (
-        // Si el quiz está en curso, muestra el contenedor del quiz.
-        <div className="quiz-container">
-          {/* Barra de Progreso */}
-          <div className="number-question">
-            {questions.map((_, idx) => {
-              let questionClass = 'question-section';
-              if (idx === currentIndex) questionClass += ' active';
-              else if (answers[idx] !== undefined) questionClass += ' answered';
-              return (
-                <div key={idx} className={questionClass}>
-                  {idx + 1}
-                </div>
-              );
-            })}
+        <div className="quiz-layout">
+          <div className="quiz-header">
+            <h1 className="quiz-title">Country Quiz</h1>
+            <div className="quiz-score-indicator">
+              <span>🏆{correctAnswersCount} / {questions.length} Points</span>
+            </div>
           </div>
-
-          {/* Componente de Pregunta y Opciones */}
-          <Question
-            question={questions[currentIndex]}
-            onAnswer={handleAnswer}
-            selected={selected}
-            showResult={showResult}
-          />
-
-          {/* Botón de Siguiente/Terminar */}
-          <div className="next-button-container">
-            {/* Solo muestra el botón después de que el usuario ha respondido */}
-            <button onClick={handleNext} disabled={!showResult}>
-                {currentIndex < questions.length - 1 ? 'Siguiente' : 'Terminar'}
-            </button>
+          <div className="question-box">
+            <div className="number-question">
+              {questions.map((_, idx) => {
+                let questionClass = 'question-section';
+                if (idx === currentIndex) questionClass += ' active';
+                else if (answers[idx] !== undefined) questionClass += ' answered';
+                return (
+                  <div key={idx} className={questionClass}>
+                    {idx + 1}
+                  </div>
+                );
+              })}
+            </div>
+            <Question
+              question={questions[currentIndex]}
+              onAnswer={handleAnswer}
+              selected={selected}
+              showResult={showResult}
+            />
           </div>
+          {/* El botón de siguiente ha sido eliminado de aquí */}
         </div>
       )}
     </>

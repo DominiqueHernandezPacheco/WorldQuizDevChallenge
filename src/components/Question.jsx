@@ -1,60 +1,51 @@
 import React from "react";
 
 export default function Question({ question, onAnswer, selected, showResult }) {
-  // Si por alguna razón la pregunta no ha cargado, no mostramos nada.
   if (!question) {
     return null;
   }
 
-  /**
-   * Determina qué clase CSS (correct, incorrect) debe tener cada botón.
-   */
   const getButtonClass = (option) => {
-    if (!showResult) {
-      return "";
-    }
-    if (option === question.answer) {
-      return "correct";
-    }
-    if (option === selected && option !== question.answer) {
-      return "incorrect";
-    }
-    return "";
+    if (!showResult) return "";
+    if (option === selected && option === question.answer) return "selected correct";
+    if (option === selected && option !== question.answer) return "selected incorrect";
+    if (option === question.answer) return "correct";
+    return "disabled-option";
   };
 
   return (
     <>
-      {/* Contenedor para la bandera */}
-      <div className="flag-container">
+      {/* ✅ CAMBIO PRINCIPAL: 
+        La bandera ahora está DENTRO del h2 junto con el texto.
+        El antiguo <div className="flag-container"> se ha eliminado.
+      */}
+      <h2 className="country-question">
         {question.type === "flag" && question.flag && (
           <img
             src={question.flag}
-            alt="Bandera del país"
-            className="flag-image"
+            alt="Bandera"
+            className="inline-flag" // Usaremos esta nueva clase para darle el estilo
           />
         )}
-      </div>
+        <span>{question.question}</span>
+      </h2>
 
-      {/* El texto de la pregunta */}
-      <h2 className="country-question">{question.question}</h2>
-
-      {/* El contenedor de los 4 botones de respuesta */}
       <div className="posible-answers">
-        {question.options.map((opt, idx) => {
-          const optionLetters = ['A', 'B', 'C', 'D'];
-
-          return (
-            <button
-              key={idx}
-              className={getButtonClass(opt)}
-              onClick={() => onAnswer(opt)}
-              disabled={showResult}
-            >
-              <span className="option-letter">{optionLetters[idx]}</span>
-              <span className="option-text">{opt}</span>
-            </button>
-          );
-        })}
+        {question.options.map((opt, idx) => (
+          <button
+            key={idx}
+            className={getButtonClass(opt)}
+            onClick={() => onAnswer(opt)}
+            disabled={showResult}
+          >
+            <span className="option-text">{opt}</span>
+            {showResult && getButtonClass(opt).includes('selected') && (
+              <span className="feedback-icon">
+                {getButtonClass(opt).includes('correct') ? '✔️' : '✖️'}
+              </span>
+            )}
+          </button>
+        ))}
       </div>
     </>
   );

@@ -112,7 +112,7 @@ export function generateQuestion(quizCountries, quizOptions, index = 0) {
     default: // 'default' asegura que siempre se genere una pregunta si algo falla.
       answer = country.name.common;
       questionText = '¿A qué país pertenece esta bandera?';
-      flag = country.flags.svg; // Usamos SVG para mejor calidad.
+      flag = country.flags.png; // Usamos SVG para mejor calidad.
       options = generateUniqueOptions(answer, quizOptions, c => c.name.common);
       break;
   }

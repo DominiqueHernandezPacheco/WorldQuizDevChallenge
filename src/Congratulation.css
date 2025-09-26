@@ -1,10 +1,12 @@
 /* src/components/Congratulation.css */
+
+/* Variables para la paleta de colores para mayor consistencia con QuizPage.css */
 :root {
-  --color-card-bg: rgba(22, 27, 34, 0.6);
-  --color-card-border: rgba(139, 148, 158, 0.2);
-  --color-accent-primary: #30C5BF;
-  --color-text-primary: #E6EDF3;
-  --color-text-on-accent: #0D1117;
+  --color-card-bg: rgba(57, 63, 110, 0.7); /* Similar al contenedor del quiz */
+  --color-card-border: rgba(255, 255, 255, 0.1);
+  --color-accent-primary: #E65895; /* Rosa del gradiente */
+  --color-text-light: #ffffff;
+  --color-text-on-accent: #ffffff; /* Texto blanco sobre el rosa */
 }
 
 .congrats-overlay {
@@ -33,7 +35,7 @@
   width: 100%;
   max-width: 400px;
   text-align: center;
-  color: var(--color-text-primary);
+  color: var(--color-text-light);
   box-shadow: 0 10px 40px rgba(0, 0, 0, 0.4);
   animation: scale-up 0.5s ease;
 }
@@ -41,6 +43,7 @@
 .congrats-icon {
   font-size: 4rem;
   margin-bottom: 1rem;
+  color: var(--color-accent-primary); /* El trofeo también usará el color rosa */
 }
 
 .congrats-card h2 {
@@ -71,7 +74,11 @@
 .congrats-score span {
   font-size: 2.5rem;
   font-weight: 700;
-  color: var(--color-accent-primary);
+  background: linear-gradient(to right, var(--color-accent-primary), #BC6BE8); /* Gradiente para el puntaje */
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  color: transparent; /* Fallback for browsers that don't support -webkit-text-fill-color */
 }
 
 .congrats-percentage {
@@ -80,8 +87,8 @@
 }
 
 .congrats-button {
-  background: var(--color-accent-primary);
-  color: var(--color-text-on-accent);
+  background: linear-gradient(var(--color-accent-primary), #BC6BE8); /* Gradiente en el botón */
+  color: var(--color-text-light);
   border: none;
   padding: 12px 24px;
   border-radius: 50px;
@@ -97,6 +104,7 @@
   box-shadow: 0 0 15px var(--color-accent-primary);
 }
 
+/* Animaciones de entrada */
 @keyframes fade-in {
   from { opacity: 0; }
   to { opacity: 1; }
