@@ -19,7 +19,15 @@
 
 .quiz-page {
   min-height: 100vh;
-  background-color: var(--color-background-solid);
+  background: 
+    repeating-linear-gradient(
+      45deg,
+      rgba(255, 255, 255, 0.03), /* El color de la línea, muy transparente */
+      rgba(255, 255, 255, 0.03) 1px,
+      transparent 1px,
+      transparent 20px /* El espacio entre las líneas */
+    ),
+    var(--color-background-solid); /* Tu color de fondo base */
   display: flex;
   justify-content: center;
   align-items: center;
@@ -76,6 +84,7 @@
   display: flex;
   flex-direction: column;
   align-items: center;
+   min-height: 450px;
 }
 
 /* --- BARRA DE PROGRESO --- */
@@ -103,6 +112,7 @@
   color: var(--color-text-light);
   font-weight: 700;
 }
+
 
 /* --- PREGUNTA Y BANDERA --- */
 
@@ -166,12 +176,15 @@
   background-color: var(--color-incorrect-bg);
   border-color: transparent;
 }
-.posible-answers button.correct:not(:selected) {
-  background-color: var(--color-card-bg);
-  border-color: var(--color-correct-border);
-}
 .posible-answers button.disabled-option {
   opacity: 0.5;
+}
+
+.posible-answers button.correct:not(:selected) {
+  background-color: #2ecc71; /* Fondo verde para la respuesta correcta */
+  border-color: #27ae60;   /* Borde verde más oscuro */
+  color: white;             /* Texto en color blanco para mejor contraste */
+  opacity: 1;               /* Aseguramos que no se vea opaco */
 }
 
 /* --- BOTÓN DE SIGUIENTE (Oculto) --- */

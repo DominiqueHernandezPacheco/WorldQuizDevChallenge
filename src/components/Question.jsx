@@ -39,12 +39,14 @@ export default function Question({ question, onAnswer, selected, showResult }) {
             disabled={showResult}
           >
             <span className="option-text">{opt}</span>
-            {showResult && getButtonClass(opt).includes('selected') && (
-              <span className="feedback-icon">
-                {getButtonClass(opt).includes('correct') ? '✔️' : '✖️'}
-              </span>
-            )}
-          </button>
+            <span className="feedback-icon">
+            {/* Si la respuesta es correcta, siempre muestra el check ✔️ */}
+            {showResult && opt === question.answer && '✔️'}
+            
+            {/* Si se seleccionó una respuesta y es incorrecta, muestra la X ✖️ */}
+            {showResult && selected === opt && selected !== question.answer && '✖️'}
+          </span>
+                    </button>
         ))}
       </div>
     </>
