@@ -1,18 +1,25 @@
-<<<<<<< HEAD
-# React + Vite
+# 🌍 World Quiz Dev Challenge
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+An interactive, gamified geography quiz application built with React. This project challenges users to test their knowledge of world countries, featuring dynamically generated questions and a highly engaging user interface.
 
-Currently, two official plugins are available:
+## ✨ Key Features
+* **Dynamic Question Engine:** Utilizes custom React hooks (`useQuestionQuizPool`) and helper functions to generate randomized, non-repeating questions from a country data API.
+* **Interactive UI/UX:** Features a clean, responsive design with custom CSS animations, including a dynamic floating-ball background to enhance the visual experience.
+* **Gamified Feedback:** Provides instant visual feedback on user answers and rewards completion with a satisfying confetti animation (via `canvas-confetti`).
+* **State Management:** Clean separation of concerns using functional components and state hooks to track scores, answers, and quiz progression.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## 🛠️ Tech Stack
+* **Frontend:** React 19, Vite
+* **Styling:** Custom CSS with keyframe animations
+* **Libraries:** `canvas-confetti`, `lucide-react`
 
-## Expanding the ESLint configuration
+## 🚀 Getting Started
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
-=======
-# World_Quiz
-WorldQuizDevChallenge
->>>>>>> 23265ab1678be22369e52c4f60f0b1f8546c0d7e
-# WorldQuizDevChallenge
+### Prerequisites
+Ensure you have Node.js installed on your local environment.
+
+### Installation
+1. Clone the repository
+2. Install the dependencies:
+   ```bash
+   npm install
